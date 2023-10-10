@@ -1,0 +1,101 @@
+---
+title: "Example with maps"
+author:
+- affiliation: Universitat Politècnica de València.
+  name: Alfonso Garmendia
+date: "`r Sys.Date()`"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: '6'
+  html_document:
+    code_folding: hide
+    fig_caption: yes
+    highlight: tango
+    self_contained: yes
+    toc: yes
+    toc_depth: 6
+---
+
+```{r setup, include=FALSE}
+#### libraries ------------------------------
+library(leaflet)
+library(leaflegend)
+library(DT)
+library(ggplot2)
+
+```
+
+## Interactive maps using leaflet
+
+Example extracted from [this post](https://roh.engineering/posts/2021/05/map-symbols-and-size-legends-for-leaflet/).
+
+More information about leaflet in R [here](http://rstudio.github.io/leaflet/).
+
+```{r data}
+data("quakes")
+```
+
+```{r}
+symbols <- makeSymbolsSize(
+  values = quakes$depth,
+  shape = 'diamond',
+  color = 'red',
+  fillColor = 'red',
+  opacity = .5,
+  baseSize = 5
+)
+leaflet() %>%
+  addTiles() %>%
+  addMarkers(data = quakes,
+             icon = symbols,
+             lat = ~lat, lng = ~long) %>%
+  addLegendSize(
+    values = quakes$depth,
+    color = 'red',
+    fillColor = 'red',
+    opacity = .5,
+    title = 'Depth',
+    shape = 'diamond',
+    orientation = 'horizontal',
+    position = 'bottomright',
+    breaks = 5)
+
+```
+
+```{r}
+numPal <- colorNumeric('viridis', 10^(quakes$mag))
+leaflet(quakes) %>%
+  addTiles() %>%
+  addSymbolsSize(values = ~10^(mag),
+                 lat = ~lat, 
+                 lng = ~long,
+                 shape = 'plus',
+                 color = ~numPal(10^(mag)),
+                 fillColor = ~numPal(10^(mag)),
+                 opacity = .5,
+                 baseSize = 1) %>%
+  addLegendSize(
+    values = ~10^(mag),
+    pal = numPal,
+    title = 'Magnitude',
+    baseSize = 1,
+    shape = 'plus',
+    orientation = 'horizontal',
+    opacity = .5,
+    fillOpacity = .3,
+    position = 'bottomleft',
+    breaks = 5)
+
+```
+
+## Interactive table using DT
+
+See [this post](https://rstudio.github.io/DT/) for more details about doing tables with DT.
+
+This table has all the data used in the previous maps. 
+
+```{r}
+datatable(quakes)
+```
+

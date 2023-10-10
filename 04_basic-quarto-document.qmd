@@ -1,0 +1,155 @@
+---
+title: Example of Quarto document
+subtitle: It is very simmilar than Rmarkdown documents
+author:
+- affiliation: Universitat Politècnica de València.
+- name: Alfonso Garmendia
+
+lang: en-EN
+language: 
+  title-block-published: "Last changed"
+date: last-modified
+date-format: iso
+
+code-fold: false
+
+toc: true
+toc-location: body
+toc-depth: 6
+
+format: 
+  html:
+    # mathjax: https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js
+    embed-resources: true
+    self-contained-math: true
+    theme: litera
+    grid:
+      body-width: 3000px
+      sidebar-width: 0px
+      margin-width: 0px
+---
+
+```{r setup, include=FALSE}
+#### libraries -----------------------------------
+library(knitr)
+```
+
+```{r figures, include=FALSE, eval=FALSE}
+### Change eval to TRUE if you want to 
+### save all figures in a folder.
+
+#### Results folder ------------------------------
+if (!dir.exists("results")) dir.create("results")
+if (!dir.exists("results/figures")) 
+  dir.create("results/figures")
+
+#### Knit options --------------------------------
+opts_chunk$set(echo = TRUE, message = FALSE, 
+  warning = FALSE,
+  results = 'markup',
+  fig.path = "results/figures/",
+  dev = "png",                      # png Figures format
+  dev.args = list(type = "cairo"),  # png args
+  dpi = 100                         # 300 for publication
+)
+
+```
+
+## Quarto
+
+This is a quarto document. Quarto uses Markdown for a simple formatting syntax when authoring a document. Do not mind on format when starting a document.
+
+The Quarto document can be rendered in any format latter: HTML, PDF, MS Word, or [almost any format](https://quarto.org/docs/output-formats/all-formats.html).
+
+For more details on using Quarto see the [quarto guide](https://quarto.org/docs/guide/) or the [gallery](https://quarto.org/docs/gallery/).
+
+When you click the **Render** button a document is generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+You decide which code and results will be shown in the final document, if any, using the chunk knit options:
+
+1.  eval = FALSE will not run the code.
+2.  include = false will run the code, but not show it.
+3.  results = 'hide' will run the code but hide the results.
+
+There are [many more](https://yihui.org/knitr/options/), this is only a selection.
+
+For example, the next code is not evaluated:
+
+```{r lm iris, eval=FALSE}
+lm.iris <- lm(Sepal.Length ~ Species, data = iris)
+summary(lm.iris)
+anova(lm.iris)
+
+```
+
+Change the chunk option `eval=TRUE` and render the document again to see the results.
+
+### Tables
+
+A good command for tables is *knitr::kable()*. Look at the way to insert the caption. The name of the chunk is used to reference the table (see @tbl-iris).
+
+-   You can also use R code inline to write your results. The *iris* dataframe has `r length(iris)` variables: `r names(iris)`.
+
+```{r tbl-iris}
+#| tbl-cap: Table made with the command 'kable()'. It shows the first ten rows of the iris data frame.
+
+kable(head(iris, 10))
+
+```
+
+### Plots
+
+You can also create plots as in @fig-iris.
+
+```{r fig-iris, fig.cap=cap, echo=FALSE}
+#| fig-cap: Iris data relationships.
+
+plot(iris[1:4], 
+  col = iris$Species, pch = 21, 
+  bg = iris$Species)
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing the R code that generated the plot.
+
+Look also the way of adding a figure caption.
+
+### Other features
+
+Other nice features to include into a document are:
+
+1.  lists
+    -   numerical or bullets
+2.  **bold** or *italic* or ***both***
+3.  Equations
+
+Note that the numbers are not important and will always be ordered.
+
+#### Equations
+
+It is possible to add equations into the text or as separate paragraph, using latex notation.
+
+This is the chisq formula inline $\chi^2_{n-1} = \sum_1^n \frac{(observed_i - expected_i)^2}{expected_i}$.
+
+Or as a outstanding formula:
+
+$$\chi^2_{n-1} = \sum_1^n \frac{(observed_i - expected_i)^2}{expected_i} $$
+
+## Output themes
+
+In the yaml header (line 24: `theme: litera`) the wanted theme is specified. You can change the output theme or even create your own theme (see [tutorial](https://quarto.org/docs/output-formats/html-themes.html) for different theme options).
+
+Change the theme and see the results.
+
+## Output format
+
+Change yaml header format (line 21: `html:`) to `docx:` and render to have your document as a docx document.
+
+Change it to `pdf:` to get a pdf file. For rendering a pdf you may need a pdf engine installed. Usually TinyTex.
+
+Of course in any format there are ways to personalize your output:
+
+-   [docx templates.](https://quarto.org/docs/output-formats/ms-word-templates.html)
+-   [pdf article templates.](https://quarto.org/docs/journals/templates.html)
+
+But that is too much for today.
